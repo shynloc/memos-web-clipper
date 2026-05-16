@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=400">
+  <title>Memos Web Clipper</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- 未配置时的引导界面 -->
+  <div id="setup-view" class="view" style="display:none">
+    <div class="setup-container">
+      <div class="setup-icon">📋</div>
+      <h2>Memos Web Clipper</h2>
+      <p class="setup-desc">一键剪藏网页内容到你的 Memos 实例</p>
+      <p class="setup-hint">首次使用需要配置 Memos 服务器地址和访问令牌</p>
+      <button id="btn-open-settings" class="btn btn-primary btn-block">
+        ⚙️ 前往设置
+      </button>
+    </div>
+  </div>
+
+  <!-- 主界面 -->
+  <div id="main-view" class="view" style="display:none">
+    <!-- 顶部栏 -->
+    <div class="header">
+      <div class="header-left">
+        <span class="logo">📋</span>
+        <span class="header-title">Memos Clipper</span>
+      </div>
+      <button id="btn-settings" class="btn-icon" title="设置">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+
+    <!-- 页面信息 -->
+    <div class="page-info">
+      <div id="page-title" class="page-title">加载中…</div>
+      <div id="page-url" class="page-url"></div>
+    </div>
+
+    <!-- 模式切换 -->
+    <div class="mode-tabs">
+      <button id="mode-page" class="mode-tab active" data-mode="page">
+        📄 整页
+      </button>
+      <button id="mode-selection" class="mode-tab" data-mode="selection" disabled>
+        ✂️ 选中文本
+      </button>
+    </div>
+
+    <!-- 内容编辑区 -->
+    <div class="editor-section">
+      <textarea id="content-editor" placeholder="剪藏内容将显示在这里…" spellcheck="false"></textarea>
+    </div>
+
+    <!-- 标签输入 -->
+    <div class="tags-section">
+      <div class="tags-input-wrapper">
+        <span class="tags-icon">#</span>
+        <input id="tags-input" type="text" placeholder="添加标签（用空格分隔）" />
+      </div>
+    </div>
+
+    <!-- 底部操作 -->
+    <div class="footer">
+      <div class="footer-left">
+        <select id="visibility-select" class="visibility-select">
+          <option value="PRIVATE">🔒 私密</option>
+          <option value="PROTECTED">👥 受保护</option>
+          <option value="PUBLIC">🌐 公开</option>
+        </select>
+      </div>
+      <button id="btn-save" class="btn btn-primary">
+        <span class="btn-text">💾 保存到 Memos</span>
+        <span class="btn-loading" style="display:none">
+          <span class="spinner"></span> 保存中…
+        </span>
+      </button>
+    </div>
+
+    <!-- 状态反馈 -->
+    <div id="status-bar" class="status-bar" style="display:none">
+      <span id="status-message"></span>
+    </div>
+  </div>
+
+  <script src="../lib/turndown.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

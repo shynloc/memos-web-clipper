@@ -1,0 +1,401 @@
+/* Memos Web Clipper — Popup Styles */
+
+:root {
+  --bg-0: #1a1a2e;
+  --bg-1: #16213e;
+  --bg-2: #1f2b47;
+  --bg-3: #263350;
+  --fg-0: #e8e8f0;
+  --fg-1: #c0c0d0;
+  --fg-2: #8888a0;
+  --fg-3: #606078;
+  --accent: #4ade80;
+  --accent-dim: rgba(74, 222, 128, 0.15);
+  --accent-hover: #22c55e;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(74, 222, 128, 0.4);
+  --error: #ef4444;
+  --error-bg: rgba(239, 68, 68, 0.12);
+  --success: #4ade80;
+  --success-bg: rgba(74, 222, 128, 0.12);
+  --warning: #f59e0b;
+  --radius: 8px;
+  --radius-sm: 6px;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 400px;
+  min-height: 200px;
+  max-height: 560px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  background: var(--bg-0);
+  color: var(--fg-0);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--fg-3);
+  border-radius: 3px;
+}
+
+/* ── Setup View ────────────────────── */
+
+.setup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  text-align: center;
+  gap: 8px;
+}
+
+.setup-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.setup-container h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fg-0);
+  letter-spacing: -0.3px;
+}
+
+.setup-desc {
+  color: var(--fg-1);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.setup-hint {
+  color: var(--fg-2);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ── Header ────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo {
+  font-size: 18px;
+}
+
+.header-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-0);
+  letter-spacing: -0.2px;
+}
+
+/* ── Page Info ─────────────────────── */
+
+.page-info {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-0);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.page-url {
+  font-size: 11px;
+  color: var(--fg-3);
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+
+/* ── Mode Tabs ─────────────────────── */
+
+.mode-tabs {
+  display: flex;
+  padding: 8px 16px;
+  gap: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mode-tab {
+  flex: 1;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--fg-2);
+  font-size: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-tab:hover:not(:disabled) {
+  background: var(--bg-2);
+  color: var(--fg-1);
+}
+
+.mode-tab.active {
+  background: var(--accent-dim);
+  border-color: var(--border-focus);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.mode-tab:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ── Editor ────────────────────────── */
+
+.editor-section {
+  padding: 8px 16px;
+}
+
+#content-editor {
+  width: 100%;
+  min-height: 180px;
+  max-height: 280px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-2);
+  color: var(--fg-0);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+#content-editor:focus {
+  border-color: var(--border-focus);
+}
+
+#content-editor::placeholder {
+  color: var(--fg-3);
+}
+
+/* ── Tags ──────────────────────────── */
+
+.tags-section {
+  padding: 0 16px 8px;
+}
+
+.tags-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-2);
+  transition: border-color 0.2s ease;
+}
+
+.tags-input-wrapper:focus-within {
+  border-color: var(--border-focus);
+}
+
+.tags-icon {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 13px;
+  user-select: none;
+}
+
+#tags-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--fg-0);
+  font-size: 12px;
+  font-family: var(--font-body);
+  outline: none;
+}
+
+#tags-input::placeholder {
+  color: var(--fg-3);
+}
+
+/* ── Footer ────────────────────────── */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-1);
+}
+
+.visibility-select {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-2);
+  color: var(--fg-1);
+  font-size: 12px;
+  font-family: var(--font-body);
+  outline: none;
+  cursor: pointer;
+}
+
+.visibility-select:focus {
+  border-color: var(--border-focus);
+}
+
+/* ── Buttons ───────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg-0);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--fg-2);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-icon:hover {
+  background: var(--bg-2);
+  color: var(--fg-0);
+}
+
+/* ── Spinner ───────────────────────── */
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(26, 26, 46, 0.3);
+  border-top-color: var(--bg-0);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Status Bar ────────────────────── */
+
+.status-bar {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  animation: slideDown 0.25s ease;
+}
+
+.status-bar.success {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.status-bar.error {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.status-bar.info {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

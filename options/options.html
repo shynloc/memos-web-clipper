@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memos Web Clipper — 设置</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="card-header">
+        <h1>
+          <span class="logo">📋</span>
+          Memos Web Clipper
+        </h1>
+        <p class="subtitle">配置你的 Memos 实例连接</p>
+      </div>
+
+      <div class="card-body">
+        <!-- 服务器地址 -->
+        <div class="form-group">
+          <label for="base-url">Memos 服务器地址</label>
+          <input
+            id="base-url"
+            type="url"
+            placeholder="https://memos.example.com"
+            spellcheck="false"
+          />
+          <div class="form-hint">你的 Memos 实例 URL，例如 https://memos.jintao.co.uk</div>
+        </div>
+
+        <!-- Access Token -->
+        <div class="form-group">
+          <label for="access-token">Access Token</label>
+          <div class="input-group">
+            <input
+              id="access-token"
+              type="password"
+              placeholder="从 Memos 设置 → 我的账号 → 访问令牌 获取"
+              spellcheck="false"
+            />
+            <button id="btn-toggle-token" class="btn-icon" title="显示/隐藏">
+              👁️
+            </button>
+          </div>
+          <div class="form-hint">
+            在 Memos 后台：<strong>设置</strong> → <strong>我的账号</strong> → <strong>访问令牌</strong> → 创建新的令牌
+          </div>
+        </div>
+
+        <!-- 测试连接 -->
+        <div class="form-group">
+          <button id="btn-test" class="btn btn-outline">
+            🔗 测试连接
+          </button>
+          <div id="test-result" class="test-result" style="display:none"></div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- 默认可见性 -->
+        <div class="form-group">
+          <label for="default-visibility">默认可见性</label>
+          <select id="default-visibility">
+            <option value="PRIVATE">🔒 私密 — 仅自己可见</option>
+            <option value="PROTECTED">👥 受保护 — 登录用户可见</option>
+            <option value="PUBLIC">🌐 公开 — 所有人可见</option>
+          </select>
+        </div>
+
+        <!-- 默认标签 -->
+        <div class="form-group">
+          <label for="default-tags">默认标签</label>
+          <input
+            id="default-tags"
+            type="text"
+            placeholder="web-clip reading"
+            spellcheck="false"
+          />
+          <div class="form-hint">每次剪藏自动添加的标签（空格分隔，不需要 # 前缀）</div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button id="btn-save" class="btn btn-primary">
+          💾 保存设置
+        </button>
+        <div id="save-status" class="save-status" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Memos Web Clipper v1.0.0 · 
+      <a href="https://github.com/usememos/memos" target="_blank">Memos</a>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
