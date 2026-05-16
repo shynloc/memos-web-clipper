@@ -1,58 +1,56 @@
 # Memos Web Clipper
 
-A Chrome extension for clipping web pages and text directly into your self-hosted [Memos](https://github.com/usememos/memos) instance, inspired by the Obsidian Web Clipper.
+一个专为 [Memos](https://github.com/usememos/memos) 开发的 Chrome 浏览器剪藏插件。灵感来源于 Obsidian Web Clipper，让你可以在浏览网页时，一键将网页内容或选中文本以 Markdown 格式保存到你自部署的 Memos 实例中。
 
 ![Memos Web Clipper Icon](icons/icon-128.png)
 
-## Features
+## ✨ 核心功能
 
-- **Full Page Clipping**: Intelligently extracts the main content of an article, filters out ads, navigation, and noise, and converts it to clean Markdown.
-- **Selection Clipping**: Select any text on a page and clip only the selection, preserving its formatting in Markdown.
-- **Context Menu Quick Save**: Right-click on a selection or page to clip directly to Memos without opening the popup.
-- **Image Upload Support**: Automatically extracts images from the web page, downloads them, and uploads them to your Memos instance's resource API before saving. (Compatible with Memos v0.28.0 API).
-- **Auto-Open Memo**: Automatically opens the newly created memo in a background tab after a successful save.
-- **Custom Tags & Visibility**: Easily append tags (defaults to `#web-clip`) and set the visibility of your memo (Private, Protected, Public).
+- **📄 整页智能剪藏**：自动提取网页正文，过滤掉广告、侧边栏和导航等噪音，并转换为干净的 Markdown 格式。
+- **✂️ 选中文本剪藏**：在网页上选中任意文字，点击剪藏只会保存选中的内容，并保留其原有的格式。
+- **🖱️ 右键快捷菜单**：选中文字后，直接点击右键选择“剪藏选中文本到 Memos”，无需打开面板即可静默保存。
+- **🖼️ 图片自动上传**：自动提取网页中的图片并上传到 Memos 的 Resources 接口，确保图片永久保存在你自己的服务器上，防止原链接失效。（兼容 Memos v0.28.0 资源接口）
+- **🚀 保存后自动打开**：成功剪藏后，会自动在后台新标签页打开刚刚创建的 memo。
+- **🏷️ 自定义标签与可见性**：每次剪藏都可以自由附加标签（默认附加 `#web-clip`）并设置 memo 的可见性（私有、受保护、公开）。
 
-## Compatibility
+## 🔗 版本兼容性
 
-This extension interacts with the `v1` REST API introduced in newer versions of Memos. 
-- Fully compatible and tested with **Memos v0.28.0+**.
-- Uses `/api/v1/auth/me` for connection validation.
-- Uses `/api/v1/memos` for saving notes.
-- Uses `/api/v1/resources` for image uploads.
+本插件通过调用 Memos 较新版本中的 `v1` REST API 运行：
+- 经过测试，**完全兼容 Memos v0.28.0+**。
+- 采用 `/api/v1/auth/me` 进行连接与 Token 验证。
+- 采用 `/api/v1/memos` 保存笔记内容。
+- 采用 `/api/v1/resources` 进行图片上传。
 
-## Installation (Developer Mode)
+## 📦 安装说明 (开发者模式)
 
-Since this extension is not yet published to the Chrome Web Store, you can load it manually:
+此插件暂未上架 Chrome 应用商店，你可以通过开发者模式手动加载使用：
 
-1. Clone or download this repository to your local machine.
-2. Open Google Chrome and navigate to `chrome://extensions/`.
-3. Toggle on **Developer mode** in the top right corner.
-4. Click the **Load unpacked** button in the top left.
-5. Select the `memos-clipper` folder.
+1. 克隆或下载本仓库代码到你的电脑上。
+2. 打开 Chrome 浏览器，地址栏输入 `chrome://extensions/` 进入扩展程序页面。
+3. 开启页面右上角的 **开发者模式** 开关。
+4. 点击左上角的 **加载已解压的扩展程序**。
+5. 选择你刚刚下载好的 `memos-clipper` 文件夹即可。
 
-## Configuration
+## ⚙️ 首次配置
 
-1. Click on the Memos Web Clipper icon in your Chrome toolbar.
-2. Click **前往设置 (Go to Settings)** or right-click the extension icon and select **Options**.
-3. **Memos 服务器地址 (Server Address)**: Enter the URL of your Memos instance (e.g., `https://memos.example.com`).
-4. **Access Token**: Enter your Personal Access Token.
-   - You can generate a token in your Memos instance by going to **Settings > My Account > Access Tokens > Create**.
-5. Click **测试连接 (Test Connection)** to verify your credentials.
-6. Click **保存设置 (Save Settings)**.
+1. 点击 Chrome 工具栏中的 Memos Web Clipper 图标。
+2. 点击 **前往设置**（或右键扩展图标选择“选项”）。
+3. **Memos 服务器地址**：输入你的 Memos 实例地址（例如：`https://memos.example.com`）。
+4. **Access Token**：输入你的个人访问令牌。
+   - 获取方式：进入你的 Memos 后台 -> **设置 (Settings)** -> **我的账号 (My Account)** -> **访问令牌 (Access Tokens)** -> **创建**。
+5. 点击 **测试连接** 按钮，确保能成功连接到你的服务器。
+6. 点击 **保存设置**。
 
-## Usage
+## ⌨️ 快捷操作
 
-- **Via Popup**: Click the extension icon on any page. Preview the extracted Markdown, edit it if necessary, choose visibility, and hit Save.
-- **Via Context Menu**: Highlight text on a webpage, right-click, and select "剪藏选中文本到 Memos" (Clip Selection to Memos).
-- **Keyboard Shortcut**: Use `Cmd+Shift+M` (macOS) or `Ctrl+Shift+M` (Windows) to open the clipper popup quickly.
+- **呼出面板**：使用快捷键 `Cmd+Shift+M` (macOS) 或 `Ctrl+Shift+M` (Windows) 可快速打开剪藏面板。
 
-## Acknowledgments
+## 🙏 致谢
 
-This project is built for and inspired by [usememos/memos](https://github.com/usememos/memos), an open-source, privacy-first, lightweight note-taking service. Easily capture and share your great thoughts. Memos is licensed under the MIT License.
+本项目的诞生离不开 [usememos/memos](https://github.com/usememos/memos) —— 一个优秀的开源、隐私优先的轻量级笔记服务。Memos 基于 MIT 协议开源。
 
-Markdown conversion is powered by [Turndown](https://github.com/mixmark-il/turndown).
+Markdown 转换功能由 [Turndown](https://github.com/mixmark-il/turndown) 强力驱动。
 
-## License
+## 📄 协议
 
-This project is open-sourced under the [MIT License](LICENSE).
+本项目基于 [MIT License](LICENSE) 开源。
