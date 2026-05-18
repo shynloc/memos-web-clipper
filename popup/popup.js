@@ -24,6 +24,7 @@
   let markdownFull = ''  // 整页 Markdown
   let markdownSel = ''   // 选中文本 Markdown
   let currentMode = 'page'
+  let currentLang = 'auto'
 
   // ── Turndown 配置 ──
   const turndownService = new TurndownService({
@@ -182,6 +183,10 @@
     await extractPage()
   }
 
+  // Set up language
+  currentLang = getActualLanguage(config.uiLanguage || 'auto')
+  applyTranslations(currentLang)
+
   // ── Event listeners ──
   btnOpenSettings.addEventListener('click', openOptions)
   btnSettings.addEventListener('click', openOptions)
@@ -220,13 +225,14 @@
   async function loadConfig() {
     return new Promise(resolve => {
       chrome.storage.local.get(
-        ['memosBaseUrl', 'memosToken', 'defaultVisibility', 'defaultTags'],
+        ['memosBaseUrl', 'memosToken', 'defaultVisibility', 'defaultTags', 'uiLanguage'],
         (result) => {
           resolve({
             baseUrl: (result.memosBaseUrl || '').replace(/\/+$/, ''),
             token: result.memosToken || '',
             defaultVisibility: result.defaultVisibility || 'PRIVATE',
             defaultTags: result.defaultTags || '',
+            uiLanguage: result.uiLanguage || 'auto'
           })
         }
       )
@@ -237,7 +243,7 @@
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
       if (!tab?.id) {
-        pageTitle.textContent = '无法获取页面信息'
+        pageTitle.textContent = t('err_extract', currentLang)
         return
       }
 
@@ -247,7 +253,7 @@
       })
 
       if (!results?.[0]?.result) {
-        pageTitle.textContent = '无法提取页面内容'
+        pageTitle.textContent = t('err_extract', currentLang)
         return
       }
 
@@ -268,7 +274,7 @@
       // 填充编辑器
       switchMode('page')
     } catch (err) {
-      pageTitle.textContent = '提取失败'
+      pageTitle.textContent = t('err_extract', currentLang)
       pageUrl.textContent = err.message
       console.error('[clipper] extract error:', err)
     }
@@ -317,8 +323,8 @@
     const lines = []
     if (data.title) lines.push(`# ${data.title}`)
     lines.push('')
-    lines.push(`> 📎 来源: [${data.title || data.url}](${data.url})`)
-    lines.push(`> 🕐 剪藏时间: ${datetime}`)
+    lines.push(`> ${t('template_source', currentLang)} [${data.title || data.url}](${data.url})`)
+    lines.push(`> ${t('template_time', currentLang)} ${datetime}`)
     lines.push('')
     lines.push(content.trim())
 
@@ -340,7 +346,7 @@
   async function handleSave() {
     let content = buildFinalContent()
     if (!content.trim()) {
-      showStatus('error', '❌ 内容为空，无法保存')
+      showStatus('error', t('err_empty', currentLang))
       return
     }
 
@@ -352,7 +358,7 @@
     try {
       // 上传图片到 Memos
       content = await processImagesInMarkdown(content, (current, total) => {
-        showStatus('info', `⬆️ 正在上传图片 (${current}/${total})…`)
+        showStatus('info', `${t('info_uploading', currentLang)} (${current}/${total})...`)
       })
 
       const visibility = visibilitySelect.value
@@ -374,19 +380,15 @@
       }
 
       const memo = await res.json()
-      showStatus('success', '✅ 已保存到 Memos')
+      showStatus('success', t('success_save', currentLang))
 
-      // 在新标签页打开刚创建的 memo
-      const memoUid = memo.uid || memo.name?.replace('memos/', '') || ''
-      if (memoUid) {
-        chrome.tabs.create({ url: `${config.baseUrl}/m/${memoUid}`, active: false })
-      }
+      // 移除自动打开新标签页逻辑
 
       // 2 秒后自动关闭 popup
       setTimeout(() => window.close(), 2000)
     } catch (err) {
       console.error('[clipper] save error:', err)
-      showStatus('error', `❌ 保存失败: ${err.message}`)
+      showStatus('error', `${t('err_save', currentLang)}${err.message}`)
     } finally {
       btnSave.disabled = false
       btnSave.querySelector('.btn-text').style.display = 'inline-flex'

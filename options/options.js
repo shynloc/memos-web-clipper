@@ -11,17 +11,35 @@
   const defaultTags        = document.getElementById('default-tags')
   const btnSave            = document.getElementById('btn-save')
   const saveStatus         = document.getElementById('save-status')
+  const uiLanguageInput    = document.getElementById('ui-language')
+
+  let currentLang = 'auto'
 
   // ── Load existing config ──
   chrome.storage.local.get(
-    ['memosBaseUrl', 'memosToken', 'defaultVisibility', 'defaultTags'],
+    ['memosBaseUrl', 'memosToken', 'defaultVisibility', 'defaultTags', 'uiLanguage'],
     (result) => {
       baseUrlInput.value      = result.memosBaseUrl || ''
       tokenInput.value        = result.memosToken || ''
       defaultVisibility.value = result.defaultVisibility || 'PRIVATE'
       defaultTags.value       = result.defaultTags || ''
+      
+      if (result.uiLanguage) {
+        uiLanguageInput.value = result.uiLanguage
+        currentLang = getActualLanguage(result.uiLanguage)
+      } else {
+        currentLang = getActualLanguage('auto')
+      }
+      
+      applyTranslations(currentLang)
     }
   )
+
+  // ── Language selection ──
+  uiLanguageInput.addEventListener('change', () => {
+    currentLang = getActualLanguage(uiLanguageInput.value)
+    applyTranslations(currentLang)
+  })
 
   // ── Toggle token visibility ──
   btnToggleToken.addEventListener('click', () => {
@@ -36,16 +54,16 @@
     const token = tokenInput.value.trim()
 
     if (!baseUrl) {
-      showTestResult('error', '❌ 请输入 Memos 服务器地址')
+      showTestResult('error', t('opt_test_fail', currentLang))
       return
     }
     if (!token) {
-      showTestResult('error', '❌ 请输入 Access Token')
+      showTestResult('error', t('opt_test_fail', currentLang))
       return
     }
 
     btnTest.disabled = true
-    btnTest.textContent = '⏳ 测试中…'
+    btnTest.textContent = t('opt_testing', currentLang)
 
     try {
       // Memos v0.28+ AuthService.GetCurrentUser
@@ -60,17 +78,18 @@
         const data = await res.json()
         const user = data.user || data
         const username = user.username || user.nickname || user.displayName || ''
-        showTestResult('success', `✅ 连接成功${username ? `，欢迎 ${username}` : ''}！`)
+        showTestResult('success', `${t('opt_test_ok', currentLang)}${username ? ` (${username})` : ''}`)
       } else if (res.status === 401) {
-        showTestResult('error', '❌ Token 无效或已过期，请重新生成')
+        showTestResult('error', t('opt_test_err', currentLang))
       } else {
-        showTestResult('error', `❌ 服务器返回 HTTP ${res.status}`)
+        showTestResult('error', `${t('opt_test_fail', currentLang)} (HTTP ${res.status})`)
       }
     } catch (err) {
-      showTestResult('error', `❌ 无法连接到服务器: ${err.message}`)
+      showTestResult('error', `${t('opt_test_fail', currentLang)}: ${err.message}`)
     } finally {
       btnTest.disabled = false
-      btnTest.textContent = '🔗 测试连接'
+      btnTest.textContent = t('opt_test_btn', currentLang).replace('🔗 ', '') // icon is outside in HTML, but here we replace all text content. Let's just use original icon + translation
+      btnTest.innerHTML = `🔗 <span data-i18n="opt_test_btn">${t('opt_test_btn', currentLang)}</span>`
     }
   })
 
@@ -87,20 +106,16 @@
       memosToken: tokenInput.value.trim(),
       defaultVisibility: defaultVisibility.value,
       defaultTags: defaultTags.value.trim(),
+      uiLanguage: uiLanguageInput.value,
     }
 
-    if (!data.memosBaseUrl) {
-      showSaveStatus('error', '❌ 请输入服务器地址')
-      return
-    }
-
-    if (!data.memosToken) {
-      showSaveStatus('error', '❌ 请输入 Access Token')
+    if (!data.memosBaseUrl || !data.memosToken) {
+      showSaveStatus('error', '❌ Error')
       return
     }
 
     chrome.storage.local.set(data, () => {
-      showSaveStatus('success', '✅ 设置已保存')
+      showSaveStatus('success', t('opt_save_ok', currentLang))
       setTimeout(() => {
         saveStatus.style.display = 'none'
       }, 3000)

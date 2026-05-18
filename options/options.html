@@ -12,31 +12,33 @@
       <div class="card-header">
         <h1>
           <span class="logo">📋</span>
-          Memos Web Clipper
+          <span data-i18n="opt_title">Memos Web Clipper</span>
         </h1>
-        <p class="subtitle">配置你的 Memos 实例连接</p>
+        <p class="subtitle" data-i18n="opt_subtitle">配置你的 Memos 实例连接</p>
       </div>
 
       <div class="card-body">
         <!-- 服务器地址 -->
         <div class="form-group">
-          <label for="base-url">Memos 服务器地址</label>
+          <label for="base-url" data-i18n="opt_server_label">Memos 服务器地址</label>
           <input
             id="base-url"
             type="url"
+            data-i18n="opt_server_ph"
             placeholder="https://memos.example.com"
             spellcheck="false"
           />
-          <div class="form-hint">你的 Memos 实例 URL，例如 https://memos.jintao.co.uk</div>
+          <div class="form-hint" data-i18n="opt_server_hint">你的 Memos 实例 URL，例如 https://memos.jintao.co.uk</div>
         </div>
 
         <!-- Access Token -->
         <div class="form-group">
-          <label for="access-token">Access Token</label>
+          <label for="access-token" data-i18n="opt_token_label">Access Token</label>
           <div class="input-group">
             <input
               id="access-token"
               type="password"
+              data-i18n="opt_token_ph"
               placeholder="从 Memos 设置 → 我的账号 → 访问令牌 获取"
               spellcheck="false"
             />
@@ -45,14 +47,18 @@
             </button>
           </div>
           <div class="form-hint">
-            在 Memos 后台：<strong>设置</strong> → <strong>我的账号</strong> → <strong>访问令牌</strong> → 创建新的令牌
+            <span data-i18n="opt_token_hint_pt1">在 Memos 后台：</span>
+            <strong data-i18n="opt_token_hint_pt2">设置</strong> → 
+            <strong data-i18n="opt_token_hint_pt3">我的账号</strong> → 
+            <strong data-i18n="opt_token_hint_pt4">访问令牌</strong> → 
+            <span data-i18n="opt_token_hint_pt5">创建新的令牌</span>
           </div>
         </div>
 
         <!-- 测试连接 -->
         <div class="form-group">
           <button id="btn-test" class="btn btn-outline">
-            🔗 测试连接
+            🔗 <span data-i18n="opt_test_btn">测试连接</span>
           </button>
           <div id="test-result" class="test-result" style="display:none"></div>
         </div>
@@ -61,30 +67,43 @@
 
         <!-- 默认可见性 -->
         <div class="form-group">
-          <label for="default-visibility">默认可见性</label>
+          <label for="default-visibility" data-i18n="opt_vis_label">默认可见性</label>
           <select id="default-visibility">
-            <option value="PRIVATE">🔒 私密 — 仅自己可见</option>
-            <option value="PROTECTED">👥 受保护 — 登录用户可见</option>
-            <option value="PUBLIC">🌐 公开 — 所有人可见</option>
+            <option value="PRIVATE" data-i18n="opt_vis_private">🔒 私密 — 仅自己可见</option>
+            <option value="PROTECTED" data-i18n="opt_vis_protected">👥 受保护 — 登录用户可见</option>
+            <option value="PUBLIC" data-i18n="opt_vis_public">🌐 公开 — 所有人可见</option>
           </select>
         </div>
 
         <!-- 默认标签 -->
         <div class="form-group">
-          <label for="default-tags">默认标签</label>
+          <label for="default-tags" data-i18n="opt_tags_label">默认标签</label>
           <input
             id="default-tags"
             type="text"
+            data-i18n="opt_tags_ph"
             placeholder="web-clip reading"
             spellcheck="false"
           />
-          <div class="form-hint">每次剪藏自动添加的标签（空格分隔，不需要 # 前缀）</div>
+          <div class="form-hint" data-i18n="opt_tags_hint">每次剪藏自动添加的标签（空格分隔，不需要 # 前缀）</div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- 界面语言 -->
+        <div class="form-group">
+          <label for="ui-language" data-i18n="opt_lang_label">语言 / Language</label>
+          <select id="ui-language">
+            <option value="auto" data-i18n="opt_lang_auto">自动 (跟随系统)</option>
+            <option value="zh">中文 (简体)</option>
+            <option value="en">English</option>
+          </select>
         </div>
       </div>
 
       <div class="card-footer">
         <button id="btn-save" class="btn btn-primary">
-          💾 保存设置
+          💾 <span data-i18n="opt_save_btn">保存设置</span>
         </button>
         <div id="save-status" class="save-status" style="display:none"></div>
       </div>
@@ -96,6 +115,7 @@
     </div>
   </div>
 
+  <script src="../lib/i18n.js"></script>
   <script src="options.js"></script>
 </body>
 </html>

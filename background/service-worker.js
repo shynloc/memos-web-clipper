@@ -1,20 +1,38 @@
 // Memos Web Clipper — Service Worker (Background)
 // 处理右键菜单和快捷键
 
+importScripts('../lib/i18n.js')
+
 // ── Context Menu ──
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'clip-selection',
-    title: '剪藏选中文本到 Memos',
-    contexts: ['selection'],
-  })
+async function createContextMenus() {
+  chrome.contextMenus.removeAll(() => {
+    chrome.storage.local.get(['uiLanguage'], (result) => {
+      const currentLang = getActualLanguage(result.uiLanguage || 'auto')
+      
+      chrome.contextMenus.create({
+        id: 'clip-selection',
+        title: t('menu_selection', currentLang),
+        contexts: ['selection'],
+      })
 
-  chrome.contextMenus.create({
-    id: 'clip-page',
-    title: '剪藏此页面到 Memos',
-    contexts: ['page'],
+      chrome.contextMenus.create({
+        id: 'clip-page',
+        title: t('menu_page', currentLang),
+        contexts: ['page'],
+      })
+    })
   })
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  createContextMenus()
+})
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.uiLanguage) {
+    createContextMenus()
+  }
 })
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
@@ -41,12 +59,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
       const pageData = results[0].result
       let content = ''
+      const currentLang = getActualLanguage(config.uiLanguage || 'auto')
 
       if (info.menuItemId === 'clip-selection' && info.selectionText) {
-        content = buildQuickClip(info.selectionText, pageData)
+        content = buildQuickClip(info.selectionText, pageData, currentLang)
       } else {
         // 整页模式：用 popup 处理更好，这里做简易版
-        content = buildQuickClip(null, pageData)
+        content = buildQuickClip(null, pageData, currentLang)
       }
 
       // 直接保存到 Memos
@@ -64,22 +83,18 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
       if (res.ok) {
         const memo = await res.json()
-        // Auto-open the created memo in a new tab
-        const memoUid = memo.uid || memo.name?.replace('memos/', '') || ''
-        if (memoUid) {
-          chrome.tabs.create({ url: `${config.baseUrl}/m/${memoUid}`, active: false })
-        }
+        // 移除自动打开新标签页逻辑
         // Notify user
         await chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: showNotification,
-          args: ['✅ 已保存到 Memos'],
+          args: [t('success_save', currentLang)],
         })
       } else {
         await chrome.scripting.executeScript({
           target: { tabId: tab.id },
           func: showNotification,
-          args: [`❌ 保存失败 (HTTP ${res.status})`],
+          args: [`${t('err_save', currentLang).replace(': ', '')} (HTTP ${res.status})`],
         })
       }
     } catch (err) {
@@ -93,20 +108,21 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 function loadConfig() {
   return new Promise(resolve => {
     chrome.storage.local.get(
-      ['memosBaseUrl', 'memosToken', 'defaultVisibility', 'defaultTags'],
+      ['memosBaseUrl', 'memosToken', 'defaultVisibility', 'defaultTags', 'uiLanguage'],
       (result) => {
         resolve({
           baseUrl: (result.memosBaseUrl || '').replace(/\/+$/, ''),
           token: result.memosToken || '',
           defaultVisibility: result.defaultVisibility || 'PRIVATE',
           defaultTags: result.defaultTags || '',
+          uiLanguage: result.uiLanguage || 'auto',
         })
       }
     )
   })
 }
 
-function buildQuickClip(selectedText, pageData) {
+function buildQuickClip(selectedText, pageData, currentLang) {
   const now = new Date()
   const datetime = now.toLocaleString('zh-CN', {
     year: 'numeric', month: '2-digit', day: '2-digit',
@@ -125,8 +141,8 @@ function buildQuickClip(selectedText, pageData) {
     // 整页模式
     lines.push(`# ${pageData.title || '(无标题)'}`)
     lines.push('')
-    lines.push(`> 📎 来源: [${pageData.title || pageData.url}](${pageData.url})`)
-    lines.push(`> 🕐 剪藏时间: ${datetime}`)
+    lines.push(`> ${t('template_source', currentLang)} [${pageData.title || pageData.url}](${pageData.url})`)
+    lines.push(`> ${t('template_time', currentLang)} ${datetime}`)
     lines.push('')
     if (pageData.meta?.description) {
       lines.push(pageData.meta.description)
